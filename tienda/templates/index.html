@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}VerdeTono{% endblock title %}
+{% block content %}
+{% load static %}
+  <h1 class="text-primary d-flex justify-content-center mt-3 mb-3"><strong>Productos destacados</strong></h1>
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="card-group"> <!-- Mantiene el card-group pero asegura que cada tarjeta esté separada -->
+            {% for producto in productos %}
+            <div class="col-md-3 col-sm-6 d-flex"> <!-- Cada tarjeta tiene su propia columna -->
+                <div class="card h-100"> <!-- Hace que las tarjetas tengan la misma altura -->
+                    <img src="{{ producto.imagen }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ producto.nombre }}">
+                    <div class="card-body">
+                        <h3 class="card-title text-primary">{{ producto | capfirst }}</h3>
+                        <p class="card-text text-primary">Nombre: {{ producto.nombre }}</p>
+                        <p class="card-text text-primary">Precio: {{ producto.precio }}$</p>
+                        <a href="{{ producto.pk }}" class="btn btn-primary">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                        {% if user.is_authenticated %}
+                        <a href="/" class="btn btn-primary">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                        <a href="/" class="btn btn-danger">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+  </div>
+
+{% endblock content %}

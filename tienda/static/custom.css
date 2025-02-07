@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap');
+
+.logo {
+    width: 150px;
+    height: auto;
+}
+
+.full-width-container {
+    width: 100%; /* Hace que ocupe todo el ancho */
+    height: 5em;
+    background-color: 0px 0px 15px 3px #f8f8f8; /* Color light (#f8f8f8) con 10% de transparencia */
+    /*border: 2px solid #05ce16; /* Borde con el color info de Bootstrap */
+    box-shadow: 0px 0px 15px 3px #273330; /* Efecto de iluminación en los bordes */
+    padding: 20px; /* Añade espacio interno */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+.container-fluid {
+    background-color: transparent;
+    background: none !important;
+}
+
+.navbar {
+    margin: 0 auto; /* Centra el navbar y evita espacios extra */
+    display: flex;
+    justify-content: center;
+}
+
+/* Contenedor de las tarjetas con espaciado entre ellas */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px; /* Espacio entre tarjetas */
+}
+
+/* Estilos de las tarjetas */
+.card {
+    width: 225px;
+    height: 400px;
+    overflow: hidden;
+    position: relative;
+    transition: 0.5s;
+    cursor: pointer;
+    box-shadow: 0px 0px 15px 1px #273330;
+    border-radius: 16px;
+    background-color: transparent;
+    margin: 10px;  /* Espacio entre tarjetas */
+    opacity: 1; /* Se asegura que todas las tarjetas se vean inicialmente */
+    transition: opacity 0.5s ease, transform 0.3s ease; /* Suaviza la transición de opacidad y escala */
+}
+
+/* Ajustar la imagen de la tarjeta */
+.card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    pointer-events: none;
+    transition: 0.5s;
+}
+
+/* Capa de gradiente que aparece sobre la imagen */
+.card .layer {
+    background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 75%;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+/* Información que aparece cuando el hover se aplica */
+.card .info {
+    position: absolute;
+    bottom: -50%;
+    padding: 15px;
+    opacity: 0;
+    transition: 0.5s bottom, 1.75s opacity;
+    font-weight: normal; /* Por defecto, no está en negrita */
+}
+
+/* Cuando se pasa el mouse por encima de la tarjeta, mostramos la capa y la info */
+.card:hover {
+    transform: scale(1.1); /* Escala la tarjeta */
+    z-index: 10; /* Asegura que la tarjeta seleccionada esté encima de las otras */
+}
+
+.card:hover .info {
+    bottom: 0;
+    opacity: 1;
+    font-weight: bold; /* Establecemos la negrita en la información */
+}
+
+.card:hover .layer {
+    opacity: 1;
+}
+
+/* Desenfoque de las tarjetas que no están siendo hover */
+.card-group:hover > .card:not(:hover) {
+    filter: blur(5px); /* Aplica el desenfoque en las tarjetas que no están siendo hover */
+    opacity: 0.6; /* Asegura que las tarjetas opacas tengan menos visibilidad */
+}
+
+/* Asegura que el texto dentro de .info se vea de manera clara */
+.info p {
+    font-size: 14px;
+    margin-top: 3px;
+}
+
+/* Estilo de los botones dentro de .info */
+.info .btn {
+    background: #273330;
+    border: none;
+    padding: 8px 12px;
+    font-weight: bold;
+    border-radius: 8px;
+    margin-top: 8px;
+}

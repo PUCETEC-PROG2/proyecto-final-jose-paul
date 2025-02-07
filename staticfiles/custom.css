@@ -1,0 +1,15 @@
+.logo {
+    width: 150px;
+    height: auto;
+}
+
+.full-width-container {
+    width: 100%; /* Hace que ocupe todo el ancho */
+    height: 5em;
+    background-color: rgba(17, 17, 17, 0.1); /* Color light (#f8f8f8) con 10% de transparencia */
+    /*border: 2px solid #05ce16; /* Borde con el color info de Bootstrap */
+    box-shadow: 0px 0px 15px 5px #05ce16; /* Efecto de iluminación en los bordes */
+    padding: 20px; /* Añade espacio interno */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
