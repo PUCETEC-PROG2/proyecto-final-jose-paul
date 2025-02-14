@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib import messages
+from django.core.exceptions import ValidationError
 from .models import Carrito, Catalogo, Cliente, Compra, DetallesDeCompra, DetallesDeVenta, DetallesDelCarrito, Producto, Proveedor, Venta
 
 # Register your models here.
@@ -12,7 +14,13 @@ class CatalogoAdmin(admin.ModelAdmin):
 
 @admin.register(Cliente)
 class ClientesAdmin(admin.ModelAdmin):
-    pass
+    def save_model(self, request, obj, form, change):
+        try:
+            # Intentar guardar el objeto
+            obj.save()
+        except ValidationError as e:
+            # Enviar el mensaje de error al admin
+            messages.error(request, str(e))
 
 @admin.register(Compra)
 class ComprasAdmin(admin.ModelAdmin):

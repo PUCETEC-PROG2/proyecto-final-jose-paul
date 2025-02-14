@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Seleccionar Cliente</h2>
+    <div class="input-group mb-3">
+        <input type="text" id="buscar_cliente" class="form-control" placeholder="Buscar por nombre o cédula" onkeyup="buscarClientes()">
+        <button class="btn btn-primary" onclick="buscarClientes()">
+            <i class="fa fa-search"></i>
+        </button>
+    </div>
+    <select id="clientes" class="form-select">
+        <option value="">Seleccione un cliente</option>
+    </select>
+    
+    <h2 class="mt-4">Filtrar Productos por Categoría</h2>
+    <select id="filtro_categoria" class="form-select mb-3" onchange="filtrarProductos()">
+        <option value="">Todas</option>
+        <option value="C">Cuerdas</option>
+        <option value="P">Percusión</option>
+        <option value="T">Teclado</option>
+        <option value="V">Viento</option>
+        <option value="E">Electrónicos</option>
+    </select>
+    
+    <table class="table justify-aling-center">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Modelo</th>
+                <th>Marca</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+            </tr>
+        </thead>
+        <tbody id="lista_productos">
+            {% for producto in productos %}
+            <tr class="producto" data-categoria="{{ producto.categoria }}">
+                <td><img src="{{ producto.imagen }}" class="img-thumbnail bg-light" style="width: 120px; height: 80px;"></td>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.modelo }}</td>
+                <td>{{ producto.marca }}</td>
+                <td class="precio">{{ producto.precio }}$</td>
+                <td>
+                    <div class="input-group">
+                        <button class="btn btn-outline-danger" onclick="cambiarCantidad('{{ producto.id_producto }}', -1)">-</button>
+                        <input type="text" id="cantidad_{{ producto.id_producto }}" class="form-control text-center cantidad" value="0" readonly>
+                        <button class="btn btn-outline-success" onclick="cambiarCantidad('{{ producto.id_producto }}', 1)">+</button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h3>Carrito</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Modelo</th>
+                <th>Marca</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="lista_carrito"></tbody>
+    </table>
+    <h4>Total: <span id="total_carrito">0</span>$</h4>
+    <button class="btn btn-primary">Añadir al Carrito</button>
+</div>
+
+<script>
+    function buscarClientes() {
+        let query = document.getElementById("buscar_cliente").value.trim();
+    
+        fetch(`/seleccionar_cliente/?q=${query}`, {
+            method: 'GET',  // Asegúrate de que sea una solicitud GET
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',  // Esta cabecera indica que es una solicitud AJAX
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            let selectClientes = document.getElementById("clientes");
+            selectClientes.innerHTML = '<option value="">Seleccione un cliente</option>';
+    
+            data.clientes.forEach(cliente => {
+                let option = document.createElement("option");
+                option.value = cliente.id_cliente;
+                option.textContent = `${cliente.nombres} ${cliente.apellidos} - ${cliente.cedula}`;
+                selectClientes.appendChild(option);
+            });
+        })
+        .catch(error => console.error("Error en la búsqueda de clientes:", error));
+    }
+    
+    
+
+    function filtrarProductos() {
+        let categoria = document.getElementById("filtro_categoria").value;
+        
+        fetch(`/productos/?categoria=${categoria}`, {
+            method: 'GET',  // Asegúrate de que sea una solicitud GET
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',  // Esta cabecera indica que es una solicitud AJAX
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            let listaProductos = document.getElementById("lista_productos");
+            listaProductos.innerHTML = "";
+    
+            data.productos.forEach(producto => {
+                let row = `
+                    <tr class="producto" data-categoria="${producto.categoria}">
+                        <td><img src="${producto.imagen}" class="img-thumbnail" style="width: 50px; height: 50px;"></td>
+                        <td>${producto.nombre}</td>
+                        <td>${producto.modelo}</td>
+                        <td>${producto.marca}</td>
+                        <td>${producto.precio}$</td>
+                        <td>
+                            <div class="input-group">
+                                <button class="btn btn-outline-danger" onclick="cambiarCantidad(${producto.id_producto}, -1)">-</button>
+                                <input type="text" id="cantidad_${producto.id_producto}" class="form-control text-center" value="0" readonly>
+                                <button class="btn btn-outline-success" onclick="cambiarCantidad(${producto.id_producto}, 1)">+</button>
+                            </div>
+                        </td>
+                    </tr>`;
+                listaProductos.innerHTML += row;
+            });
+        });
+    }
+
+    function cambiarCantidad(id, cambio) {
+        let input = document.getElementById(`cantidad_${id}`);
+        let nuevaCantidad = Math.max(0, parseInt(input.value) + cambio);
+        input.value = nuevaCantidad;
+        actualizarCarrito(id, nuevaCantidad);
+    }
+
+    function actualizarCarrito(id, cantidad) {
+        let cliente_id = document.getElementById("clientes").value;
+
+        fetch(`/actualizar_carrito/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded", "X-CSRFToken": getCookie('csrftoken') },
+            body: `producto_id=${id}&cantidad=${cantidad}&cliente_id=${cliente_id}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                document.getElementById("total_carrito").innerText = data.total_carrito.toFixed(2) + "$";
+                actualizarListaCarrito();
+            }
+        });
+    }
+
+    function actualizarListaCarrito() {
+        let cliente_id = document.getElementById("clientes").value;
+
+        fetch(`/carrito/?cliente_id=${cliente_id}`)
+        .then(response => response.json())
+        .then(data => {
+            let listaCarrito = document.getElementById("lista_carrito");
+            listaCarrito.innerHTML = "";
+
+            data.detalles.forEach(detalle => {
+                let row = `
+                    <tr>
+                        <td>${detalle.nombre}</td>
+                        <td>${detalle.modelo}</td>
+                        <td>${detalle.marca}</td>
+                        <td>${detalle.precio}$</td>
+                        <td>${detalle.cantidad}</td>
+                        <td>${(detalle.precio * detalle.cantidad).toFixed(2)}$</td>
+                    </tr>`;
+                listaCarrito.innerHTML += row;
+            });
+        });
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    document.querySelector(".btn-primary").addEventListener("click", function() {
+        let query = document.getElementById("buscar_cliente").value.trim();
+        buscarClientes(query);
+    });
+
+    document.getElementById("buscar_cliente").addEventListener("input", buscarClientes);
+</script>
+{% endblock %}

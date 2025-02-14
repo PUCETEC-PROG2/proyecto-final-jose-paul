@@ -5,7 +5,10 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
-from django.db import models, connection
+from django.db import models, connection, IntegrityError, OperationalError, transaction
+from django.core.exceptions import ValidationError
+from django.contrib import messages
+import psycopg2
 
 
 class AuthGroup(models.Model):
@@ -111,13 +114,46 @@ class Cliente(models.Model):
     telefono = models.CharField(unique=True, max_length=10)
     direccion = models.CharField(max_length=300)
     fecha_de_registro = models.DateTimeField(blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.nombres} {self.apellidos} - ({self.cedula})"
 
     class Meta:
         managed = False
         db_table = 'cliente'
         verbose_name = "Cliente"           # Nombre singular en el admin
         verbose_name_plural = "Clientes"
+        
+    @transaction.atomic    
+    def save(self, *args, **kwargs):
+        try:
+            # Guardar el cliente en la base de datos primero
+            super(Cliente, self).save(*args, **kwargs)
 
+            # Llamar al procedimiento almacenado
+            with connection.cursor() as cursor:
+                cursor.execute('CALL gestionar_cliente(%s, %s, %s, %s, %s, %s)', [
+                    self.cedula, 
+                    self.nombres, 
+                    self.apellidos, 
+                    self.correo_electronico, 
+                    self.telefono, 
+                    self.direccion,
+                ])
+        except IntegrityError:
+            # Error relacionado con integridad (como duplicados)
+            raise ValidationError("Error: La cédula, correo o teléfono ya están registrados.")
+        except OperationalError:
+            # Error relacionado con la base de datos
+            raise ValidationError("Error: No se pudo conectar con la base de datos.")
+        except psycopg2.Error as e:
+            # Captura de errores específicos de PostgreSQL (por ejemplo, un RAISE EXCEPTION en SQL)
+            error_msg = str(e).split("\n")[0]  # Extrae solo la primera línea del error
+            error_msg = error_msg.replace("CONTEXT:", "").strip()  # Elimina detalles técnicos
+            raise ValidationError(f"Error en la base de datos: {error_msg}")
+        except Exception as e:
+            # Captura de cualquier otro tipo de error inesperado
+            raise ValidationError(f"Error inesperado: {str(e).split('\n')[0]}")
 
 class Compra(models.Model):
     id_compra = models.AutoField(primary_key=True)
@@ -236,7 +272,7 @@ class Producto(models.Model):
         ('E', 'Electrónicos'),
     }
     categoria = models.CharField(max_length=50, choices=P_CATALOGO)
-    imagen = models.ImageField(upload_to="proyecto_images", blank=True, null=True)  # Permitir que sea opcional
+    imagen = models.ImageField(upload_to="proyecto_images/", blank=True, null=True)  # Permitir que sea opcional
     fecha_de_creacion = models.DateField()
 
     def __str__(self):

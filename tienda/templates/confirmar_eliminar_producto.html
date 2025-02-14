@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ pokemon | capfirst }}{% endblock title %}
+{% block content %}
+<div class="d-flex justify-content-center mt-4 mb-2">
+  <h2>¿Seguro que quieres eliminar el producto "{{ producto.nombre }}"?</h2>
+</div>
+
+<div class="d-flex justify-content-center">
+  <form method="POST" style="background: transparent !important;">
+    {% csrf_token %}
+    <button class="btn btn-danger m-2" type="submit">Sí, eliminar</button>
+    <a href="{% url 'tiendamusical:index' %}" class="btn btn-secondary m-2">Cancelar</a>
+  </form>
+</div>
+
+
+{% endblock content %}

@@ -1,4 +1,94 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap');
+@font-face {
+    font-family: 'MiFuente1'; /* Nombre personalizado */
+    src: url('fonts/Designer.woff2') format('woff2'),
+         url('fonts/Designer.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'MiFuente2'; /* Nombre personalizado */
+    src: url('fonts/Deep-Shadow.woff2') format('woff2'),
+         url('fonts/Deep-Shadow.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'MiFuente3'; /* Nombre personalizado */
+    src: url('fonts/GraffitiUrban-Regular.woff2') format('woff2'),
+         url('fonts/GraffitiUrban-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'MiFuente4'; /* Nombre personalizado */
+    src: url('fonts/Creamer-.woff2') format('woff2'),
+         url('fonts/Creamer-.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'MiFuente5'; /* Nombre personalizado */
+    src: url('fonts/DailyFlashback-Regular-Demo.woff2') format('woff2'),
+         url('fonts/DailyFlashback-Regular-Demo.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'MiFuente6'; /* Nombre personalizado */
+    src: url('fonts/Louis-George-Cafe-Bold.woff2') format('woff2'),
+         url('fonts/Louis-George-Cafe-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'MiFuente7'; /* Nombre personalizado */
+    src: url('fonts/Louis-George-Cafe-Light.woff2') format('woff2'),
+         url('fonts/Louis-George-Cafe-Light.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+body {
+    font-family: 'MiFuente6';
+    font-size: 1.1rem;
+    letter-spacing: -0.5px;
+    word-spacing: 1px;
+    font-style: bold;
+}
+  
+h1 {
+    font-family: 'MiFuente1';
+    font-size: 4rem;
+    letter-spacing: 0px;
+    word-spacing: 10px;
+    font-style:unset;
+}
+
+h5 {
+    font-family: 'MiFuente6';
+    font-size: 1.5rem;
+    letter-spacing: 0px;
+    word-spacing: 1px;
+    font-style:unset;
+}
+
+p {
+    font-family: 'MiFuente7';
+    font-size: 1.25rem;
+    letter-spacing: 0px;
+    word-spacing: 1px;
+}
+
+.p1 {
+    font-size: 1rem;
+}
 
 .logo {
     width: 150px;
@@ -29,13 +119,22 @@
 /* Contenedor de las tarjetas con espaciado entre ellas */
 .row {
     display: flex;
+    justify-content: center; /* Centra los elementos dentro de la fila */
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
     flex-wrap: wrap;
-    gap: 25px; /* Espacio entre tarjetas */
 }
+
+
+.col-sm-2 {
+    flex: 1; /* Asegura que las columnas se ajusten proporcionalmente */
+}
+
 
 /* Estilos de las tarjetas */
 .card {
-    width: 225px;
+    width: 260px;
     height: 400px;
     overflow: hidden;
     position: relative;
@@ -44,7 +143,6 @@
     box-shadow: 0px 0px 15px 1px #273330;
     border-radius: 16px;
     background-color: transparent;
-    margin: 10px;  /* Espacio entre tarjetas */
     opacity: 1; /* Se asegura que todas las tarjetas se vean inicialmente */
     transition: opacity 0.5s ease, transform 0.3s ease; /* Suaviza la transición de opacidad y escala */
 }
@@ -116,3 +214,210 @@
     border-radius: 8px;
     margin-top: 8px;
 }
+
+.nav-item.dropdown {
+    position: relative; /* Asegura que el menú se posicione correctamente */
+}
+
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.nav-item.dropdown > a::after {
+    display: none !important; /* Oculta la flechita */
+}
+
+/* 🔹 Evita que el menú desaparezca inmediatamente */
+.nav-item.dropdown .dropdown-menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    min-width: 200px; /* Ancho mínimo para evitar cierres rápidos */
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 🔹 Aumenta el área "sensible" para evitar que se cierre rápido */
+.nav-item.dropdown::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 15px; /* Aumenta el área donde el usuario puede mover el mouse */
+    background: transparent;
+}
+
+@media (max-width: 1024px) {
+    .card-1 {
+      max-width: 100%; /* Se expande para ocupar toda la pantalla */
+    }
+  
+    .row-1 {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  
+    .col-md-4 {
+      flex: 1 1 50%; /* La imagen ocupará el 50% del ancho en lugar del 40% */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  
+    .col-md-4 img {
+      width: 90%; /* Hace que la imagen ocupe el 90% del contenedor para que sea más grande */
+      height: auto;
+      max-height: 400px; /* Aumenta la altura máxima */
+      object-fit: cover; /* Ajusta la imagen sin perder proporción */
+    }
+  
+    .col-md-8 {
+      flex: 1 1 50%; /* La información ahora ocupa el otro 50% */
+    }
+  
+    .card-body-1 ul {
+      padding-left: 0;
+    }
+  }
+
+
+.card-body-1 ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.card-body-1 ul li {
+    display: flex; /* Mantiene todo en la misma línea */
+    align-items: center; /* Asegura alineación vertical */
+    margin-bottom: 20px;
+}
+
+.card-body-1 ul li i {
+    margin-right: 15px; /* Espacio entre el icono y el texto */
+    font-size: 1.2em; /* Ajusta el tamaño del icono */
+    color: #273330; /* Cambia el color del icono si es necesario */
+}
+
+.card-body-1 ul li h4 {
+    margin: 0; /* Evita espacios innecesarios */
+    display: inline; /* Hace que <h4> se comporte como texto en línea */
+}
+
+form {
+    background-color: #f8f9fa;
+}
+
+.login-container {
+    background-color: #111111;
+    padding: 70px 130px;
+    margin: 30px auto;  /* Centrar horizontalmente */
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 600px;
+    transform: translateY(-20px);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Asegura que el contenido dentro se alinee bien */
+}
+
+.login-container input {
+    width: 100%;  /* Ocupar todo el ancho disponible */
+    max-width: 500px;  /* Ajusta el tamaño máximo */
+    padding: 10px;
+    font-size: 16px;
+}
+
+
+  
+input, select, textarea {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding: 4px;
+    font-size: 1rem;
+    width: 100%;
+    margin-left: 0;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #495057;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+button {
+    font-size: 1.2rem;
+    border-radius: 0%;
+}
+
+label {
+    margin-right: none; /* Acorta el espacio entre el label y el campo */
+}
+
+.footer-basic {
+    padding:40px 0;
+    background-color:transparent;
+    color:#4b4c4d;
+  }
+  
+  .footer-basic ul {
+    padding:0;
+    list-style:none;
+    text-align:center;
+    font-size:18px;
+    line-height:1.6;
+    margin-bottom:0;
+  }
+  
+  .footer-basic li {
+    padding:0 10px;
+  }
+  
+  .footer-basic ul a {
+    color:inherit;
+    text-decoration:none;
+    opacity:0.8;
+  }
+  
+  .footer-basic ul a:hover {
+    opacity:1;
+  }
+  
+  .footer-basic .social {
+    text-align:center;
+    padding-bottom:25px;
+  }
+  
+  .footer-basic .social > a {
+    font-size:24px;
+    width:40px;
+    height:40px;
+    line-height:40px;
+    display:inline-block;
+    text-align:center;
+    border-radius:50%;
+    margin:0 8px;
+    color:inherit;
+    opacity:0.75;
+  }
+  
+  .footer-basic .social > a:hover {
+    opacity:0.9;
+  }
+  
+  .footer-basic .copyright {
+    margin-top:15px;
+    text-align:center;
+    font-size:20px;
+    color:#aaa;
+    margin-bottom:0;
+  }
+  

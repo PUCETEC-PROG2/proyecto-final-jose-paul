@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ pokemon | capfirst }}{% endblock title %}
+{% block content %}
+<div class="d-flex justify-content-center mt-2 mb-2">
+  <p class=><h1><strong>Información del instrumento:</strong></p>
+</div>
+
+<div class="card-1 mb-3" style="max-width: 100%;">
+  <div class="row-1 g-0 d-flex align-items-center">
+    <!-- Columna de la imagen -->
+    <div class="col-md-4">
+      <img src="{{ producto.imagen }}" class="img-fluid rounded-start" alt="{{ producto.nombre }}">
+    </div>
+
+    <!-- Columna de la información -->
+    <div class="col-md-8">
+      <div class="card-body-1">
+        <ul>
+          <li><i class="fa-solid fa-pen-nib"></i><h4><strong>Nombre:</strong> {{ producto.nombre }}</li>
+          <li><i class="fa-solid fa-certificate"></i><h4><strong>Marca:</strong> {{ producto.marca }}</li>
+          <li><i class="fa-solid fa-tag"></i><h4><strong>Modelo:</strong> {{ producto.modelo }}</li>
+          <li><i class="fa-solid fa-dollar-sign"></i><h4><strong>Precio:</strong> {{ producto.precio }}$</li>
+          <li><i class="fa-solid fa-circle-info"></i><h4><strong>Descripción:</strong> {{ producto.descripcion }}</li>
+          <li><i class="fa-solid fa-list"></i><h4><strong>Categoría:</strong> {{ producto.get_categoria_display }}</li>
+          <li><i class="fa-solid fa-calendar-days"></i><h4><strong>Fecha de fabricación:</strong> {{ producto.fecha_de_creacion }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center">
+  <a href="{% url 'tiendamusical:index' %}" class="btn btn-secondary m-2">Regresar</a>
+</div>
+
+{% endblock content %}
