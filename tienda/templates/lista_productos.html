@@ -142,7 +142,7 @@
 
     function actualizarCarrito(id, cantidad) {
         let cliente_id = document.getElementById("clientes").value;
-
+    
         fetch(`/actualizar_carrito/`, {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded", "X-CSRFToken": getCookie('csrftoken') },
@@ -156,18 +156,20 @@
                 document.getElementById("total_carrito").innerText = data.total_carrito.toFixed(2) + "$";
                 actualizarListaCarrito();
             }
-        });
+        })
+        .catch(error => console.error("Error al actualizar el carrito:", error));
     }
-
+    
+    // Forzar la actualización del carrito visualmente
     function actualizarListaCarrito() {
         let cliente_id = document.getElementById("clientes").value;
-
+    
         fetch(`/carrito/?cliente_id=${cliente_id}`)
         .then(response => response.json())
         .then(data => {
             let listaCarrito = document.getElementById("lista_carrito");
             listaCarrito.innerHTML = "";
-
+    
             data.detalles.forEach(detalle => {
                 let row = `
                     <tr>
@@ -182,6 +184,7 @@
             });
         });
     }
+    
 
     function getCookie(name) {
         let cookieValue = null;
@@ -204,5 +207,58 @@
     });
 
     document.getElementById("buscar_cliente").addEventListener("input", buscarClientes);
+
+    function procesarVenta() {
+        let cliente_id = document.getElementById("clientes").value;
+        if (!cliente_id) {
+            alert("Debe seleccionar un cliente.");
+            return;
+        }
+    
+        let productos = [];
+        document.querySelectorAll("#lista_carrito tr").forEach(row => {
+            let celdas = row.querySelectorAll("td");
+            let producto = {
+                id_producto: row.dataset.id_producto,
+                cantidad: parseInt(celdas[4].innerText),
+                precio_unitario: parseFloat(celdas[3].innerText.replace("$", ""))
+            };
+            productos.push(producto);
+        });
+    
+        if (productos.length === 0) {
+            alert("No hay productos en el carrito.");
+            return;
+        }
+    
+        let detallesJSON = JSON.stringify(productos);
+    
+        fetch("/procesar_venta/", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json", 
+                "X-CSRFToken": getCookie('csrftoken') 
+            },
+            body: JSON.stringify({ 
+                id_cliente: cliente_id, 
+                detalles: detallesJSON 
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                alert(`Venta realizada con éxito. ID: ${data.id_venta}`);
+                document.getElementById("lista_carrito").innerHTML = "";
+                document.getElementById("total_carrito").innerText = "0$";
+            }
+        })
+        .catch(error => console.error("Error al procesar la venta:", error));
+    }
+    
+    // Asignar la función al botón "Añadir al Carrito"
+    document.querySelector(".btn-primary").addEventListener("click", procesarVenta);
+    
 </script>
 {% endblock %}

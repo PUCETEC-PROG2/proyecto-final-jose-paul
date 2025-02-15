@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}VerdeTono{% endblock title %}
+{% block content %}
+
+{% load static %}
+<h1 class="text-center text-primary mt-5">Acerca de Nosotros</h1>
+<div class="full-width-container mt-5 d-flex align-items-center justify-content-center text-center" style="background-image: url('{% static 'Estudio.svg' %}'); height: 700px;">
+  <div class="col-md-10 p-4" style="color: #f8f8f8">
+      <div class="container">
+        <h4 class="text-justify mt-5 w-100">Bienvenidos a nuestra tienda de instrumentos musicales, un lugar donde la pasión por la música cobra vida. Desde hace varios años, nos hemos dedicado a ofrecer los mejores instrumentos para músicos de todos los niveles, desde principiantes hasta profesionales.</h4>
+        <h4 class="text-justify mt-5 w-100">Nos enorgullece distribuir marcas reconocidas y también contar con nuestra propia línea de instrumentos fabricados con material reciclado, diseñados con la más alta calidad y precisión. Cada pieza refleja nuestra dedicación a la excelencia y el compromiso con los artistas que confían en nosotros.</h4>
+        <h4 class="text-justify mt-5 w-100">Gracias a nuestra experiencia en el mercado, entendemos las necesidades de los músicos y trabajamos constantemente para ofrecer productos innovadores, asesoramiento experto y un servicio excepcional. Ven y descubre todo lo que tenemos para ti. ¡Tu música merece lo mejor!</h4>
+      </div>
+  </div>
+</div>
+{% endblock content %}

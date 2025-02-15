@@ -71,7 +71,23 @@ h1 {
     font-style:unset;
 }
 
+h2 {
+    font-family: 'MiFuente1';
+    font-size: 3rem;
+    letter-spacing: 0px;
+    word-spacing: 10px;
+    font-style:unset;
+}
+
 h5 {
+    font-family: 'MiFuente6';
+    font-size: 1.5rem;
+    letter-spacing: 0px;
+    word-spacing: 1px;
+    font-style:unset;
+}
+
+h4 {
     font-family: 'MiFuente6';
     font-size: 1.5rem;
     letter-spacing: 0px;
@@ -420,4 +436,10 @@ label {
     color:#aaa;
     margin-bottom:0;
   }
+
+  .carousel-control {
+    background-color: transparent;
+    border: none;
+  }
+  
   

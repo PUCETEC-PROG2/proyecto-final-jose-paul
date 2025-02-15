@@ -21,6 +21,10 @@ def index(request):
         'productos': productos,
     }, request))
     
+def acerca_de(request):
+    template = loader.get_template('acerca_de.html')
+    return HttpResponse(template.render({}, request))
+    
 def clientes (request):
     clientes = Cliente.objects.all().order_by('nombres')
     template = loader.get_template('clientes.html')
